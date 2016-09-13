@@ -19,7 +19,11 @@ if [ ! -f uImage ];then
 fi
 
 rm -rf build
-mkdir -p build/{tmp,dev,proc,sbin,usr/sbin}
+mkdir build/
+rm -rf miniroot/build
+if [ ! $1 ="debootstrap" ];then
+    mkdir -p build/{tmp,dev,proc,sbin,usr/sbin}
+fi
 cp -a boot build/
 cp -a miniroot/build/* build/
 cp uImage build/boot/
@@ -125,7 +129,9 @@ else
   exit
 fi
 
-dd if=build/boot/sunxi-spl.bin of=$OUTPUT bs=1024 seek=8 conv=notrunc
-dd if=build/boot/u-boot.bin    of=$OUTPUT bs=1024 seek=32 conv=notrunc
+dd if=build/boot/u-boot-sunxi-with-spl.bin of=$OUTPUT bs=1024 seek=8 conv=notrunc
+
+#dd if=build/boot/sunxi-spl.bin of=$OUTPUT bs=1024 seek=8 conv=notrunc
+#dd if=build/boot/u-boot.bin    of=$OUTPUT bs=1024 seek=32 conv=notrunc
 
 sudo losetup -d /dev/${DEV:0:5}
